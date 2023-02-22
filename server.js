@@ -3,15 +3,28 @@ const fastify = require("fastify")({
   logger: true,
 });
 
+function unquoteBigNumbers(payload) {
+  const replacer = (matchingSubstr) => {
+    console.log(matchingSubstr);
+    return matchingSubstr.slice(1, -1);
+  };
+  const data = payload.replace(/("[\d]+\.{0,1}[\d]*")/g, replacer);
+  console.log(data);
+  return data;
+}
+
 // Declare a route
 fastify.get("/", (request, reply) => {
   reply.type("application/json");
   // raw response in json format, big number value is not quoted
-  reply.send(`{
-    "hello": "world",
-    "array_of_nums": { "nested": [23, "this is a text", 11111111122222222222, 9900000.22]},
-    "big_number": 2323866757078990912
-  }`);
+  const data = {
+    hello: "world",
+    array_of_nums: {
+      nested: [23, "this is a text", "11111111122222222222", 9900000.22],
+    },
+    big_number: "2323866757078990912",
+  };
+  reply.send(unquoteBigNumbers(JSON.stringify(data)));
 });
 
 // Run the server!
