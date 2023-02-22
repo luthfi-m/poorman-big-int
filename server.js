@@ -9,6 +9,7 @@ fastify.get("/", (request, reply) => {
   // raw response in json format, big number value is not quoted
   reply.send(`{
     "hello": "world",
+    "array_of_nums": { "nested": [23, "this is a text", 11111111122222222222, 9900000.22]},
     "big_number": 2323866757078990912
   }`);
 });
